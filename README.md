@@ -1,5 +1,7 @@
 # printer-typesetting
+
 printer-typesetting / 打印排版
+
 部分小票打印机没有排版方法, 所以有了这个项目
 
 
