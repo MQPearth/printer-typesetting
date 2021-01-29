@@ -21,4 +21,4 @@ printer-typesetting / 打印排版
 
 示例
 
-![](E:\PROJECT\java\printer-typesetting\doc\demo.png)
+![](doc/demo.png)
