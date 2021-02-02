@@ -109,7 +109,7 @@ public class Line {
             int length = charByte.length;
             //解码后字节大于2 , 即为汉字
             //当前行的长度不足 放不下的字符换到下一行 当前行的剩余空间补齐空格
-            if (currentLineIndex + length >= maxLength) {
+            if (currentLineIndex + length > maxLength) {
                 int remainingLength = maxLength - currentLineIndex;
                 for (int j = 0; j < remainingLength; j++) {
                     singleLine[currentLineIndex + j] = PrinterCons.DEFAULT_BLANK_BYTE;

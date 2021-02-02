@@ -97,11 +97,11 @@ public class Content {
 
     public static void main(String[] args) {
         List<String[]> contentList = new ArrayList<>(3);
-        contentList.add(new String[]{"count", "amount", "name"});
+        contentList.add(new String[]{"count", "name", "amount"});
         contentList.add(new String[]{"1", "三利干发帽女吸水包头巾长超强浴帽速干加厚毛巾可爱擦头发干发巾", "$12.00"});
         contentList.add(new String[]{"2", "谜尚bb霜旗舰店官网迷尚大红女遮瑕持久保湿迷上粉底液隔离cc霜", "$59.00"});
         //设置各列的宽度
-        Content content = new Content(contentList, new int[]{10, 10, 10});
+        Content content = new Content(contentList, new int[]{6, 18, 6});
         System.out.println(content.toString());
     }
 
