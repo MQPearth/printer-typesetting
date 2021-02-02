@@ -1,6 +1,6 @@
 package printer;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  * Line
@@ -47,7 +47,7 @@ public class Line {
         }
         //填充内容
         for (int i = 0; i < valueArray.length; i++) {
-            byte[][] bytes = spitArray(PrinterUtil.getBytes(valueArray[i]), property.columnMaxLength[i]);
+            byte[][] bytes = spitArray(valueArray[i], property.columnMaxLength[i]);
             fill(bytes, property.columnsStartEnd[i][0]);
         }
 
@@ -94,17 +94,51 @@ public class Line {
     /**
      * 将内容超出长度的分割为多行
      *
-     * @param bytes     内容
+     * @param value     内容
      * @param maxLength 最大长度
      * @return 分割后的内容
      */
-    private byte[][] spitArray(byte[] bytes, int maxLength) {
-        int needCount = PrinterUtil.calMaxNeedCount(bytes.length, maxLength);
-        byte[][] spitArray = new byte[needCount][maxLength];
-        int startIndex = 0;
-        for (int i = 0; i < spitArray.length; i++) {
-            spitArray[i] = Arrays.copyOfRange(bytes, startIndex, startIndex + maxLength);
-            startIndex += maxLength;
+    private byte[][] spitArray(String value, int maxLength) {
+        LinkedList<Byte[]> lines = new LinkedList<>();
+        char[] charArray = value.toCharArray();
+        //当前行的下标
+        int currentLineIndex = 0;
+        Byte[] singleLine = new Byte[maxLength];
+        for (int i = 0; i < charArray.length; i++) {
+            byte[] charByte = PrinterUtil.getBytes(Character.toString(charArray[i]));
+            int length = charByte.length;
+            //解码后字节大于2 , 即为汉字
+            //当前行的长度不足 放不下的字符换到下一行 当前行的剩余空间补齐空格
+            if (currentLineIndex + length >= maxLength) {
+                int remainingLength = maxLength - currentLineIndex;
+                for (int j = 0; j < remainingLength; j++) {
+                    singleLine[currentLineIndex + j] = PrinterCons.DEFAULT_BLANK_BYTE;
+                }
+                lines.add(singleLine);
+                singleLine = new Byte[maxLength];
+                //重置下标
+                currentLineIndex = 0;
+                i--;
+                continue;
+            }
+            for (int j = 0; j < length; j++) {
+                singleLine[currentLineIndex + j] = charByte[j];
+            }
+            currentLineIndex += length;
+        }
+        lines.add(singleLine);
+
+        byte[][] spitArray = new byte[lines.size()][maxLength];
+        int i = 0;
+        for (Byte[] byteLines : lines) {
+            for (int j = 0; j < spitArray[i].length; j++) {
+                Byte byteObject = byteLines[j];
+                if (byteObject == null) {
+                    byteObject = 0;
+                }
+                spitArray[i][j] = byteObject;
+            }
+            i++;
         }
         return spitArray;
     }
